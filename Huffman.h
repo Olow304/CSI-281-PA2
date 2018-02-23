@@ -1,6 +1,10 @@
+#include <iostream>
+#include <fstream>
 #include <queue>
-#include <unordered_map>
+#include <fstream>
 #include <string>
+#include <unordered_map>
+
 using namespace std;
 
 struct Tree
@@ -14,6 +18,11 @@ struct Tree
 		return lt->frequentChar > rt->frequentChar;
 	}
 };
+
+//DEFINE - STL CLASSES
+priority_queue<Tree*, vector<Tree*>, Tree> priority_q;
+unordered_map<char, int> fq;
+unordered_map<char, string> hcode;
 
 Tree* create_node(char, int, Tree*, Tree*);
 void encode_characters(Tree* root, string str, unordered_map<char, string> &huffCode);
