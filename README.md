@@ -1,14 +1,12 @@
 # CSI-281-PA2
-Huffman coding assignment. 
-### Will be updating soon!
+Huffman coding assignment.
 
-### Testing...
-For manual testing only, if you give the string named "Just give some characters to test this program" the output as follows...
+### User input...
+For user input only, if you give the string named <b>"Just give some characters to test this program"</b> the output as follows...
 ```
 string testing = "Just give some characters to test this program";
 create_huff(testing);
 ```
-
 ```
   Huffman Code:
   v 00000
