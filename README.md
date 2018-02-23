@@ -36,4 +36,4 @@ The Decoded text:
 Decoded huffman code is: Just give some characters to test this program
 ```
 
-#### For file reading will be implemented soon!
+#### For file reading, we'll be implementing soon!
