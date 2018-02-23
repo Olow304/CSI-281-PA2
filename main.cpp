@@ -17,9 +17,23 @@ int main()
 		{
 			readOGInput >> word;
 			readOGInput.ignore(); // ignore newline character
-			create_huff(word);
+			addToMap(word);
+
+			create_huff();
+			codeTree();
 		}
 	}
+
+	if (writeHuffCode.good())
+	{
+		writeHuffmanOutput(writeHuffCode, word);
+	}
+
+	if (writeHuffDecode.good())
+	{
+		writeHuffmanDecoded(writeHuffDecode, word);
+	}
+
 	system("pause");
 	return 0;
 }

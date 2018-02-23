@@ -3,4 +3,7 @@
 using namespace std;
 
 // HELPER FUNCTIONS FOR THE MAIN FUNCTION
-void addWord(string wordToEncode);
+
+void writeHuffmanOutput(ofstream &stream, string word);
+
+void writeHuffmanDecoded(ofstream &stream, string word);

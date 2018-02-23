@@ -9,22 +9,40 @@ using namespace std;
 
 struct Tree
 {
-	char characts;
-	int frequentChar;
-	Tree *leftNode, *rightNode;
+	Tree() { leftNode = rightNode = NULL; };
+	Tree(string letters, int letterFreq, Tree* leftChild, Tree* rightChild);
+	~Tree() { delete leftNode, rightNode; }
+	
+	string	encodedChars;
+	int		charFreq;
+	Tree*	leftNode;
+	Tree*	rightNode;
+};
 
-	bool operator()(Tree* lt, Tree* rt)
+// Source: https://stackoverflow.com/questions/19535644/how-to-use-the-priority-queue-stl-for-objects
+struct compareTrees
+{
+	bool operator()(const Tree* &tree1, const Tree* &tree2) const
 	{
-		return lt->frequentChar > rt->frequentChar;
+		return tree1->charFreq < tree2->charFreq; // watch the sign
 	}
 };
 
-//DEFINE - STL CLASSES
-priority_queue<Tree*, vector<Tree*>, Tree> priority_q;
-unordered_map<char, int> fq;
-unordered_map<char, string> hcode;
+/*
+Data structures used in this project:
+- Priority queue: stores forest of Trees, takes the Tree with the smallest value and adds to the Huffman Tree.
+- Tree: Starts out with each character having its own Tree, stored in priority queue.
+- Huffman Tree: Tree constructed from forest of trees in the priority queue
+- Unordered Lists: Stores the codes of the individual letters in one of them, and the codes of the edges in the other.
+*/
+// Define them here so that we can access them from functions.cpp
+unordered_map<string, int> charFreqs;
+unordered_map<string, string> huffmanSequence;
+priority_queue<Tree*, vector<Tree*>, compareTrees> huffForest;
 
-Tree* create_node(char, int, Tree*, Tree*);
-void encode_characters(Tree* root, string str, unordered_map<char, string> &huffCode);
-void decode_characters(Tree* root, int &pos, string str);
-void create_huff(string data);
+void encode_characters(Tree* root, string byteString);
+void decode_characters(Tree* root, int &huffCodeIndex, string byteString);
+void create_huff();
+
+void addToMap(string data);
+void codeTree();
