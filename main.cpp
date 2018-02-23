@@ -20,7 +20,6 @@ int main()
 			create_huff(word);
 		}
 	}
-
 	system("pause");
 	return 0;
 }
