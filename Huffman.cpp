@@ -9,11 +9,16 @@ Tree::Tree(string letterToEncode, int letterFreq, Tree* leftChild, Tree* rightCh
 }
 
 //inspired by >>> https://stackoverflow.com/questions/21886654/encoding-a-huffman-binary-tree
-void encode_characters(Tree* root, string byteString)
+string encodeCharacters(Tree* root, string &byteString)
 {
+	if (byteString == "START")
+	{
+		byteString = "";
+	}
+
 	if (root == NULL)
 	{
-		return;
+		return "";
 	}
 
 	if (!root->leftNode && !root->rightNode)
@@ -21,12 +26,14 @@ void encode_characters(Tree* root, string byteString)
 		huffmanSequence[root->encodedChars] = byteString;
 	}
     
-	encode_characters(root->leftNode, byteString + "0");
-	encode_characters(root->rightNode, byteString + "1");
+	encodeCharacters(root->leftNode, byteString + "0");
+	encodeCharacters(root->rightNode, byteString + "1");
+
+	return byteString;
 }
 
 // credit goes to >>> https://stackoverflow.com/questions/21854069/decoding-huffman-tree
-void decode_characters(Tree* root, int &huffCodeIndex, string byteString)
+void decodeCharacters(Tree* root, int &huffCodeIndex, string byteString)
 {
     //If root equals to null, just return
 	if (root == NULL)
@@ -39,16 +46,17 @@ void decode_characters(Tree* root, int &huffCodeIndex, string byteString)
     {
         cout << root->encodedChars;
     }
+	
 	huffCodeIndex++;
 
 	// If edge is 0, go to left node, else go right
 	if (byteString[huffCodeIndex] == '0')
 	{
-		decode_characters(root->leftNode, huffCodeIndex, byteString);
+		decodeCharacters(root->leftNode, huffCodeIndex, byteString);
 	}
 	else
 	{
-		decode_characters(root->rightNode, huffCodeIndex, byteString);
+		decodeCharacters(root->rightNode, huffCodeIndex, byteString);
 	}
 }
 
@@ -57,7 +65,7 @@ void addToMap(string data)
 	int freqCount = 0;
 
 	// STEP 1: Get characters from string and add them to an unordered map charFreqs
-	for (int i = 0; i < data.length(); i++)
+	for (unsigned int i = 0; i < data.size(); i++)
 	{
 		string theKey = "";
 		theKey += (data[i]);
@@ -73,8 +81,7 @@ void addToMap(string data)
 	}
 }
 
-//The fun thing happens here, like creating huffman coding and working with files, etc.
-void create_huff()
+void createHuffmanTree()
 {
 	// STEP 3: construct the huffman tree
 	while (huffForest.size() != 1)
@@ -99,21 +106,28 @@ void create_huff()
 	}
 }
 
-void codeTree()
+string getEncoding()
 {
-	string	byteString = "";
-	int		huffCodeIndex = 0;
-
+	string finalEncoding = "START";
 	Tree*	root = huffForest.top();
 
 	// STEP 4: Encode data, store in unordered map
-	encode_characters(root, "");
+	finalEncoding += encodeCharacters(root, finalEncoding);
 
-    // STEP 5: Decode huffman encoding of data from unordered map
-    cout << "Decoded huffman code is: ";
+	return finalEncoding;
+}
+
+void decodeTree(string byteString)
+{
+    
+	int		huffCodeIndex = 0;
+	Tree*	root = huffForest.top();
+
+	// STEP 5: Decode huffman encoding of data from unordered map
+	cout << "Decoded huffman code is: ";
 	while (huffCodeIndex < (int)byteString.size() - 1)
 	{
-		decode_characters(root, huffCodeIndex, byteString);
+		decodeCharacters(root, huffCodeIndex, byteString);
 	}
     cout << endl;
 }

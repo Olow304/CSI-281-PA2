@@ -4,7 +4,7 @@ using namespace std;
 
 void writeHuffmanOutput(ofstream &stream, string word)
 {
-	// we need to output this data into file called huffmanoutput.txt
+	// Writes encoded output to "huffmanoutput.txt"
 	cout << "Huffman Code: " << endl;
 	stream << "Huffman Code for the word " << word << ":" << "\n";
 
@@ -18,11 +18,27 @@ void writeHuffmanOutput(ofstream &stream, string word)
 	cout << endl;
 }
 
-void writeHuffmanDecoded(ofstream &stream, string word)
+void writeHuffmanDecoded(ofstream &stream, string byteString)
 {
-	// we need to output this data into file called reconstructedinput.txt
-	for (char c : data)
-		byteString += huffmanSequence[c] + " ";
-	cout << endl;
-	cout << "Encoded huffman code: " << byteString << " " << endl;
+	// Decodes and writes output to "reconstructedinput.txt"
+	string output;
+
+	cout << "Reconstructed Input: " << endl;
+	stream << "Original binary code for the word " << byteString << ":" << "\n";
+
+	for (auto character : byteString)
+	{
+		string letter;
+		string letterCode;
+
+		letter += character;
+		letterCode = huffmanSequence[letter];
+		output += letterCode;
+
+		stream << "Letter: " << letter << "\n";
+		stream << "Corresponding code: " << letterCode << "\n\n";
+	}
+
+	stream << "Final decoding: " << output << "\n";
+	cout << "Final decoding: " << output << endl;
 }

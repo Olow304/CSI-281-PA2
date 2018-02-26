@@ -6,4 +6,4 @@ using namespace std;
 
 void writeHuffmanOutput(ofstream &stream, string word);
 
-void writeHuffmanDecoded(ofstream &stream, string word);
+//void writeHuffmanDecoded(ofstream &stream, string byteString);

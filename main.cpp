@@ -1,11 +1,11 @@
-#include "Huffman.h"
 #include "functions.h"
 
 using namespace std;
 
 int main()
 {
-	string			word;
+	string			word,
+					byteString;
 	ifstream		readOGInput("huffmaninput.txt");
 	ofstream		writeHuffCode("huffmanoutput.txt"),
 					writeHuffDecode("reconstructedinput.txt");
@@ -19,20 +19,23 @@ int main()
 			readOGInput.ignore(); // ignore newline character
 			addToMap(word);
 
-			create_huff();
-			codeTree();
+			createHuffmanTree();
+			byteString = getEncoding();
+			decodeTree(byteString);
+
+			if (writeHuffCode.good())
+			{
+				writeHuffmanOutput(writeHuffCode, word);
+			}
+
+			/*if (writeHuffDecode.good())
+			{
+				writeHuffmanDecoded(writeHuffDecode, byteString);
+			}*/
 		}
 	}
 
-	if (writeHuffCode.good())
-	{
-		writeHuffmanOutput(writeHuffCode, word);
-	}
-
-	if (writeHuffDecode.good())
-	{
-		writeHuffmanDecoded(writeHuffDecode, word);
-	}
+	
 
 	system("pause");
 	return 0;
