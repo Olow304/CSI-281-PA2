@@ -1,5 +1,20 @@
 #include "Huffman.h"
 
+using namespace std;
+
+/*
+Data structures used in this project:
+- Priority queue: stores forest of Trees, takes the Tree with the smallest value and adds to the Huffman Tree.
+- Tree: Starts out with each character having its own Tree, stored in priority queue.
+- Huffman Tree: Tree constructed from forest of trees in the priority queue
+- Unordered Lists: Stores the codes of the individual letters in one of them, and the codes of the edges in the other.
+*/
+
+unordered_map<string, int> charFreqs;
+unordered_map<string, string> huffmanSequence;
+
+priority_queue<Tree, vector<Tree>, Tree> huffForest;
+
 Tree::Tree(string letterToEncode, int letterFreq, Tree* leftChild, Tree* rightChild)
 {
     encodedChars = letterToEncode;
@@ -8,31 +23,41 @@ Tree::Tree(string letterToEncode, int letterFreq, Tree* leftChild, Tree* rightCh
 	this->rightNode = rightChild;
 }
 
-//inspired by >>> https://stackoverflow.com/questions/21886654/encoding-a-huffman-binary-tree
-string encodeCharacters(Tree* root, string &byteString)
+Tree::Tree(string letterToEncode, int letterFreq, Tree leftChild, Tree rightChild)
 {
-	if (byteString == "START")
-	{
-		byteString = "";
-	}
-
-	if (root == NULL)
-	{
-		return "";
-	}
-
-	if (!root->leftNode && !root->rightNode)
-	{
-		huffmanSequence[root->encodedChars] = byteString;
-	}
-    
-	encodeCharacters(root->leftNode, byteString + "0");
-	encodeCharacters(root->rightNode, byteString + "1");
-
-	return byteString;
+	encodedChars = letterToEncode;
+	charFreq = letterFreq;
+	this->leftNode = &leftChild;
+	this->rightNode = &rightChild;
 }
 
-// credit goes to >>> https://stackoverflow.com/questions/21854069/decoding-huffman-tree
+// Adapted from https://stackoverflow.com/questions/21886654/encoding-a-huffman-binary-tree
+string encodeCharacters(Tree* node, string byteString, string search)
+{
+	if (node == NULL)
+	{
+		return byteString;
+	}
+
+	if (node->encodedChars == search)
+	{
+		 // return the byte string
+		huffmanSequence[node->encodedChars] = byteString;
+		return byteString;
+	}
+    
+	// Adapted from 
+	if (node->leftNode->encodedChars.find(search) != string::npos) 
+	{
+		return encodeCharacters(node->leftNode, byteString + "1", search);
+	}
+	else if(node->rightNode->encodedChars.find(search) != string::npos) 
+	{
+		return encodeCharacters(node->rightNode, byteString + "1", search);
+	}
+}
+
+// Adapted from https://stackoverflow.com/questions/21854069/decoding-huffman-tree
 void decodeCharacters(Tree* root, int &huffCodeIndex, string byteString)
 {
     //If root equals to null, just return
@@ -62,57 +87,63 @@ void decodeCharacters(Tree* root, int &huffCodeIndex, string byteString)
 
 void addToMap(string data)
 {
-	int freqCount = 0;
-
 	// STEP 1: Get characters from string and add them to an unordered map charFreqs
 	for (unsigned int i = 0; i < data.size(); i++)
 	{
 		string theKey = "";
 		theKey += (data[i]);
-		charFreqs[theKey] = ++freqCount;
-		i++;
+		cout << "Key: " << theKey << endl;
+		charFreqs[theKey]++;
+		cout << "Value: " << charFreqs[theKey] << endl;
 	}
 
+	cout << charFreqs.size() << endl;
 	// STEP 2: create nodes/trees and initially store them in the priority queue huffForest
 	for (auto tree : charFreqs)
 	{
 		Tree* newNode = new Tree(tree.first, tree.second, NULL, NULL);
-		huffForest.push(newNode);
+		cout << "Adding new node with the name " << tree.first << " and value of " << tree.second << endl;
+		huffForest.push(*newNode);
 	}
 }
 
-void createHuffmanTree()
+Tree createHuffmanTree()
 {
 	// STEP 3: construct the huffman tree
 	while (huffForest.size() != 1)
 	{
 		// Tree with lowest freq
-		Tree* lowestFreq = huffForest.top();
-		huffForest.pop();
+		Tree lowestFreq = huffForest.top();
+		//huffForest.pop(); Triggers destuctor which breaks program
 
 		// Tree with second lowest freq
-		Tree* secondLowestFreq = huffForest.top();
-		huffForest.pop();
+		Tree secondLowestFreq = huffForest.top();
+		//huffForest.pop();
 
 		// Get the frequency of the root of the new tree
-		int newFreq = lowestFreq->charFreq + secondLowestFreq->charFreq;
+		int newFreq = lowestFreq.charFreq + secondLowestFreq.charFreq;
 
 		// Create a new string containing both of the letters being inserted
-		string treeName = lowestFreq->encodedChars + secondLowestFreq->encodedChars;
+		string treeName = lowestFreq.encodedChars + secondLowestFreq.encodedChars;
 
 		// Create a new tree by inserting the roots of the trees with lowest frequencies as nodes
 		Tree* newTree = new Tree(treeName, newFreq, lowestFreq, secondLowestFreq);
-		huffForest.push(newTree);
+		lowestFreq.charFreq = 2500000; // max int const
+		secondLowestFreq.charFreq = 2500000;
+
+		huffForest.push(*newTree); // crashes here
 	}
+
+	return huffForest.top();
 }
 
-string getEncoding()
+string getEncoding(string word)
 {
-	string finalEncoding = "START";
-	Tree*	root = huffForest.top();
+	string	finalEncoding = "";
+	Tree	root = huffForest.top();
 
 	// STEP 4: Encode data, store in unordered map
-	finalEncoding += encodeCharacters(root, finalEncoding);
+	encodeCharacters(&root, finalEncoding, word);
 
 	return finalEncoding;
 }
@@ -121,13 +152,54 @@ void decodeTree(string byteString)
 {
     
 	int		huffCodeIndex = 0;
-	Tree*	root = huffForest.top();
+	Tree	root = huffForest.top();
 
 	// STEP 5: Decode huffman encoding of data from unordered map
 	cout << "Decoded huffman code is: ";
 	while (huffCodeIndex < (int)byteString.size() - 1)
 	{
-		decodeCharacters(root, huffCodeIndex, byteString);
+		decodeCharacters(&root, huffCodeIndex, byteString);
 	}
     cout << endl;
+}
+
+void writeHuffmanOutput(ofstream &stream, string word)
+{
+	// Writes encoded output to "huffmanoutput.txt"
+	cout << "Huffman Code: " << endl;
+	stream << "Huffman Code for the word " << word << ":" << "\n";
+
+	for (auto tree : huffmanSequence)
+	{
+		cout << tree.first << " " << tree.second << endl;
+		stream << "Letter: " << tree.first << "\n";
+		stream << "Sequence: " << tree.second << "\n\n";
+	}
+
+	cout << endl;
+}
+
+void writeHuffmanDecoded(ofstream &stream, string byteString)
+{
+	// Decodes and writes output to "reconstructedinput.txt"
+	string output = "";
+
+	cout << "Reconstructed Input: " << endl;
+	stream << "Original binary code for the word " << byteString << ":" << "\n";
+
+	for (auto character : byteString)
+	{
+		string letter;
+		string letterCode;
+
+		letter += character;
+		letterCode = huffmanSequence[letter];
+		output += letterCode;
+
+		stream << "Letter: " << letter << "\n";
+		stream << "Corresponding code: " << letterCode << "\n\n";
+	}
+
+	stream << "Final decoding: " << output << "\n";
+	cout << "Final decoding: " << output << endl;
 }

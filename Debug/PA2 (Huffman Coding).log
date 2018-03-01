@@ -1,54 +1,5 @@
-﻿  Huffman.cpp
-C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.12.25827\include\xutility(523): error C2664: 'bool Tree::operator ()(const Tree *&,const Tree *&) const': cannot convert argument 1 from 'Tree *' to 'const Tree *&'
-  C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.12.25827\include\xutility(523): note: Conversion loses qualifiers
-  C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.12.25827\include\xutility(1017): note: see reference to function template instantiation 'decltype(auto) std::_Ref_fn<_Pr>::operator ()<Tree*&,_Ty&>(Tree *&,_Ty &)' being compiled
-          with
-          [
-              _Pr=Tree,
-              _Ty=Tree *
-          ]
-  C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.12.25827\include\xutility(1014): note: see reference to function template instantiation 'bool std::_Debug_lt_pred<_Pr&,Tree*&,_Ty&>(std::_Ref_fn<Tree>&,_Ty1,_Ty2,std::_Dbfile_t,std::_Dbline_t) noexcept(<expr>)' being compiled
-          with
-          [
-              _Pr=std::_Ref_fn<Tree>,
-              _Ty=Tree *,
-              _Ty1=Tree *&,
-              _Ty2=Tree *&
-          ]
-  C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.12.25827\include\algorithm(2207): note: see reference to function template instantiation 'void std::_Push_heap_by_index<Tree**,_Diff,Tree*,std::_Ref_fn<_Pr>>(_RanIt,_Diff,_Diff,_Ty &&,std::_Ref_fn<_Pr>)' being compiled
-          with
-          [
-              _Pr=Tree,
-              _RanIt=Tree **,
-              _Diff=_Diff,
-              _Ty=Tree *
-          ]
-  C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.12.25827\include\queue(357): note: see reference to function template instantiation 'void std::push_heap<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,_Pr>(_RanIt,_RanIt,_Pr)' being compiled
-          with
-          [
-              _Ty=Tree *,
-              _Pr=Tree,
-              _RanIt=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<Tree *>>>
-          ]
-  C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.12.25827\include\queue(355): note: while compiling class template member function 'void std::priority_queue<Tree *,std::vector<Tree *,std::allocator<_Ty>>,Tree>::push(Tree *const &)'
-          with
-          [
-              _Ty=Tree *
-          ]
-  Huffman.cpp(80): note: see reference to function template instantiation 'void std::priority_queue<Tree *,std::vector<Tree *,std::allocator<_Ty>>,Tree>::push(Tree *const &)' being compiled
-          with
-          [
-              _Ty=Tree *
-          ]
-  d:\csi-281-01\homework\huffman coding\csi-281-pa2\Huffman.h(50): note: see reference to class template instantiation 'std::priority_queue<Tree *,std::vector<Tree *,std::allocator<_Ty>>,Tree>' being compiled
-          with
-          [
-              _Ty=Tree *
-          ]
+﻿  main.cpp
+  Huffman.cpp
   Generating Code...
-  Compiling...
-  functions.cpp
-  Generating Code...
-  Compiling...
-  main.cpp
-  Generating Code...
+d:\csi-281-01\homework\huffman coding\csi-281-pa2\huffman.cpp(58): warning C4715: 'encodeCharacters': not all control paths return a value
+  PA2 (Huffman Coding).vcxproj -> D:\CSI-281-01\Homework\Huffman Coding\CSI-281-PA2\Debug\PA2 (Huffman Coding).exe
