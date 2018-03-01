@@ -21,6 +21,7 @@ using namespace std;
 int main()
 {
 	string			word,
+					decodedWord,
 					byteString;
 	ifstream		readOGInput("huffmaninput.txt");
 	ofstream		writeHuffCode("huffmanoutput.txt"),
@@ -39,7 +40,7 @@ int main()
 
 			huffTree = createHuffmanTree();
 			byteString = getEncoding(word);
-			decodeTree(byteString);
+			decodedWord = decodeTree(byteString);
 
 			if (writeHuffCode.good())
 			{

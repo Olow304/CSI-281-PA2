@@ -29,7 +29,7 @@ struct Tree
 string getEncoding(string word);
 
 string encodeCharacters(Tree* root, string byteString, string search);
-void decodeCharacters(const Tree* root, int &huffCodeIndex, string byteString);
+void decodeCharacters(const Tree* node, int &huffCodeIndex, string byteString);
 
 Tree createHuffmanTree();
 

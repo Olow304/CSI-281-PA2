@@ -36,7 +36,7 @@ string encodeCharacters(Tree* node, string byteString, string search)
 {
 	if (node == NULL)
 	{
-		return byteString;
+		return "";
 	}
 
 	if (node->encodedChars == search)
@@ -46,7 +46,7 @@ string encodeCharacters(Tree* node, string byteString, string search)
 		return byteString;
 	}
     
-	// Adapted from 
+	// Adapted from https://stackoverflow.com/questions/2340281/check-if-a-string-contains-a-string-in-c
 	if (node->leftNode->encodedChars.find(search) != string::npos) 
 	{
 		return encodeCharacters(node->leftNode, byteString + "1", search);
@@ -58,31 +58,27 @@ string encodeCharacters(Tree* node, string byteString, string search)
 }
 
 // Adapted from https://stackoverflow.com/questions/21854069/decoding-huffman-tree
-void decodeCharacters(Tree* root, int &huffCodeIndex, string byteString)
+string decodeCharacters(Tree* root, string byteEncoding)
 {
-    //If root equals to null, just return
-	if (root == NULL)
+	string decoded;
+	Tree* node = root; // initially set to root
+	for (int i = 0; i != byteEncoding.size(); ++i)
 	{
-		return;
+		if (byteEncoding[i] == '0') // traverse tree until leaf, add encoding
+		{ 
+			node = node->leftNode;
+		}
+		else 
+		{
+			node = node->rightNode;
+		}
+		if (!node->leftNode)
+		{
+			decoded += node->encodedChars;
+			node = root;
+		}
 	}
-
-    //else we found a leaf
-    if (!root->leftNode && !root->rightNode)
-    {
-        cout << root->encodedChars;
-    }
-	
-	huffCodeIndex++;
-
-	// If edge is 0, go to left node, else go right
-	if (byteString[huffCodeIndex] == '0')
-	{
-		decodeCharacters(root->leftNode, huffCodeIndex, byteString);
-	}
-	else
-	{
-		decodeCharacters(root->rightNode, huffCodeIndex, byteString);
-	}
+	return decoded;
 }
 
 void addToMap(string data)
@@ -114,7 +110,7 @@ Tree createHuffmanTree()
 	{
 		// Tree with lowest freq
 		Tree lowestFreq = huffForest.top();
-		//huffForest.pop(); Triggers destuctor which breaks program
+		//huffForest.pop(); Triggers destuctor which breaks program, don't uncomment
 
 		// Tree with second lowest freq
 		Tree secondLowestFreq = huffForest.top();
@@ -128,8 +124,12 @@ Tree createHuffmanTree()
 
 		// Create a new tree by inserting the roots of the trees with lowest frequencies as nodes
 		Tree* newTree = new Tree(treeName, newFreq, lowestFreq, secondLowestFreq);
-		lowestFreq.charFreq = 2500000; // max int const
-		secondLowestFreq.charFreq = 2500000;
+		
+		// change frequency after creating tree in order to push to the back of the priority queue, allowing
+		// for the creation of more trees
+		// stop when < 2 trees with an actual frequency remain
+		lowestFreq.charFreq = INT_MAX; // max int const
+		secondLowestFreq.charFreq = INT_MAX;
 
 		huffForest.push(*newTree); // crashes here
 	}
@@ -139,28 +139,21 @@ Tree createHuffmanTree()
 
 string getEncoding(string word)
 {
-	string	finalEncoding = "";
-	Tree	root = huffForest.top();
+	Tree		root = huffForest.top();
 
 	// STEP 4: Encode data, store in unordered map
-	encodeCharacters(&root, finalEncoding, word);
-
-	return finalEncoding;
+	return encodeCharacters(&root, string(), word);
 }
 
-void decodeTree(string byteString)
+string decodeTree(string byteString)
 {
-    
-	int		huffCodeIndex = 0;
-	Tree	root = huffForest.top();
+	string		decodedWord;
+	Tree		root = huffForest.top();
 
 	// STEP 5: Decode huffman encoding of data from unordered map
 	cout << "Decoded huffman code is: ";
-	while (huffCodeIndex < (int)byteString.size() - 1)
-	{
-		decodeCharacters(&root, huffCodeIndex, byteString);
-	}
-    cout << endl;
+	decodedWord = decodeCharacters(&root, byteString);
+    // add couts to track encoding
 }
 
 void writeHuffmanOutput(ofstream &stream, string word)
