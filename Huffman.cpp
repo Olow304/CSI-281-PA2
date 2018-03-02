@@ -1,3 +1,10 @@
+/*
+Authors:		Saleban Olow, Victor Alves
+Class:			CSI-281-01
+Assignment:		Programming Assignment 2: Huffman Coding
+Assigned:		Week 5 Day 2
+Due Date:		Thursday, March 1, 2018 11:59 PM
+*/
 #include "Huffman.h"
 
 using namespace std;
