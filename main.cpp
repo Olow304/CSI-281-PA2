@@ -35,7 +35,6 @@ int main()
 		while (!readOGInput.eof())
 		{
 			readOGInput >> word;
-			readOGInput.ignore(); // ignore newline character
 			addToMap(word);
 
 			huffTree = createHuffmanTree();
@@ -44,7 +43,7 @@ int main()
 
 			if (writeHuffCode.good())
 			{
-				writeHuffmanOutput(writeHuffCode, word);
+				writeHuffmanOutput(writeHuffCode, decodedWord);
 			}
 
 			if (writeHuffDecode.good())

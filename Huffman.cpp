@@ -49,9 +49,10 @@ string encodeCharacters(Tree* node, string byteString, string search)
 	// Adapted from https://stackoverflow.com/questions/2340281/check-if-a-string-contains-a-string-in-c
 	if (node->leftNode->encodedChars.find(search) != string::npos) 
 	{
-		return encodeCharacters(node->leftNode, byteString + "1", search);
+		return encodeCharacters(node->leftNode, byteString + "0", search);
 	}
-	else if(node->rightNode->encodedChars.find(search) != string::npos) 
+	else
+		//(node->rightNode->encodedChars.find(search) != string::npos) 
 	{
 		return encodeCharacters(node->rightNode, byteString + "1", search);
 	}
@@ -105,33 +106,43 @@ void addToMap(string data)
 
 Tree createHuffmanTree()
 {
+	Tree	lowestFreq,
+			secondLowestFreq;
+
+	int		newFreq;
+	string	treeName;
+
+	bool	twoRemaining = false;
+	
 	// STEP 3: construct the huffman tree
-	while (huffForest.size() != 1)
+	while (!twoRemaining)
 	{
 		// Tree with lowest freq
-		Tree lowestFreq = huffForest.top();
+		 lowestFreq = huffForest.top();
 		//huffForest.pop(); Triggers destuctor which breaks program, don't uncomment
 
 		// Tree with second lowest freq
-		Tree secondLowestFreq = huffForest.top();
+		secondLowestFreq = huffForest.top();
 		//huffForest.pop();
-
+		if (lowestFreq.charFreq == INT_MAX && secondLowestFreq.charFreq == INT_MAX)
+		{
+			twoRemaining = true;
+		}
 		// Get the frequency of the root of the new tree
-		int newFreq = lowestFreq.charFreq + secondLowestFreq.charFreq;
+		newFreq = lowestFreq.charFreq + secondLowestFreq.charFreq;
 
 		// Create a new string containing both of the letters being inserted
-		string treeName = lowestFreq.encodedChars + secondLowestFreq.encodedChars;
+		treeName = lowestFreq.encodedChars + secondLowestFreq.encodedChars;
 
 		// Create a new tree by inserting the roots of the trees with lowest frequencies as nodes
 		Tree* newTree = new Tree(treeName, newFreq, lowestFreq, secondLowestFreq);
-		
 		// change frequency after creating tree in order to push to the back of the priority queue, allowing
 		// for the creation of more trees
 		// stop when < 2 trees with an actual frequency remain
 		lowestFreq.charFreq = INT_MAX; // max int const
 		secondLowestFreq.charFreq = INT_MAX;
 
-		huffForest.push(*newTree); // crashes here
+		huffForest.push(*newTree);
 	}
 
 	return huffForest.top();
@@ -154,6 +165,7 @@ string decodeTree(string byteString)
 	cout << "Decoded huffman code is: ";
 	decodedWord = decodeCharacters(&root, byteString);
     // add couts to track encoding
+	return decodedWord;
 }
 
 void writeHuffmanOutput(ofstream &stream, string word)

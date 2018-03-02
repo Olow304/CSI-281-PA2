@@ -9,10 +9,10 @@ using namespace std;
 
 struct Tree
 {
-	Tree() { leftNode = rightNode = NULL; };
+	Tree() { leftNode = NULL; rightNode = NULL; };
 	Tree(string letters, int letterFreq, Tree* leftChild, Tree* rightChild);
 	Tree(string letters, int letterFreq, Tree leftChild, Tree rightChild);
-	~Tree() { delete leftNode, rightNode; }
+	~Tree() { delete leftNode; delete rightNode; }
 	
 	string	encodedChars;
 	int		charFreq;
@@ -29,12 +29,12 @@ struct Tree
 string getEncoding(string word);
 
 string encodeCharacters(Tree* root, string byteString, string search);
-void decodeCharacters(const Tree* node, int &huffCodeIndex, string byteString);
+string decodeCharacters(Tree* node, string byteString);
 
 Tree createHuffmanTree();
 
 void addToMap(string data);
-void decodeTree(string byteString);
+string decodeTree(string byteString);
 
 void writeHuffmanOutput(ofstream &stream, string word);
 void writeHuffmanDecoded(ofstream &stream, string byteString);
